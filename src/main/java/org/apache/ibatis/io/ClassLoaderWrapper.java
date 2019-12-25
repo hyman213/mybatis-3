@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
+ * ClassLoader 包装器。可使用多个 ClassLoader 加载对应的资源，直到有一成功后返回资源。
  * A class to wrap access to multiple class loaders making them work as one
  *
  * @author Clinton Begin
@@ -79,6 +80,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 获得指定类名对应的类
    * Find a class on the classpath (or die trying)
    *
    * @param name - the class to look for
@@ -102,6 +104,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 获得指定资源的 InputStream 对象
    * Try to get a resource from a group of classloaders
    *
    * @param resource    - the resource to get
@@ -143,9 +146,11 @@ public class ClassLoaderWrapper {
 
       if (null != cl) {
 
+        // 获得URL，不带/
         // look for the resource as passed in...
         url = cl.getResource(resource);
 
+        // 获得URL，带/
         // ...but some class loaders want this leading "/", so we'll add it
         // and try again if we didn't find the resource
         if (null == url) {
@@ -201,6 +206,11 @@ public class ClassLoaderWrapper {
 
   }
 
+  /**
+   * 获得ClassLoader数组
+   * @param classLoader
+   * @return
+   */
   ClassLoader[] getClassLoaders(ClassLoader classLoader) {
     return new ClassLoader[]{
         classLoader,

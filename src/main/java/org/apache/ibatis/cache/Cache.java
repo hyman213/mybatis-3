@@ -18,6 +18,7 @@ package org.apache.ibatis.cache;
 import java.util.concurrent.locks.ReadWriteLock;
 
 /**
+ * MyBatis 中提供了一级缓存（会话缓存，默认开启）和二级缓存(按需手动开启<cache/>)
  * SPI for cache providers.
  * <p>
  * One instance of cache will be created for each namespace.

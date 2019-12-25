@@ -25,6 +25,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
+ * 结果字段的注解
  * @author Clinton Begin
  */
 @Documented
@@ -33,14 +34,17 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 public @interface Result {
   boolean id() default false;
 
+  // 数据库字段
   String column() default "";
 
+  // Java Type字段
   String property() default "";
 
   Class<?> javaType() default void.class;
 
   JdbcType jdbcType() default JdbcType.UNDEFINED;
 
+  // 使用的 TypeHandler 处理器
   Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
 
   One one() default @One;

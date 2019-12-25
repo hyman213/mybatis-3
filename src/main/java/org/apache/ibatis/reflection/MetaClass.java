@@ -27,6 +27,7 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * 类的元数据
  * @author Clinton Begin
  */
 public class MetaClass {
@@ -44,6 +45,7 @@ public class MetaClass {
   }
 
   public MetaClass metaClassForProperty(String name) {
+    // 属性的类
     Class<?> propType = reflector.getGetterType(name);
     return MetaClass.forClass(propType, reflectorFactory);
   }
@@ -115,11 +117,13 @@ public class MetaClass {
   private Type getGenericGetterType(String propertyName) {
     try {
       Invoker invoker = reflector.getGetInvoker(propertyName);
+      // 如果 MethodInvoker 对象，则说明是 getting 方法，解析方法返回类型
       if (invoker instanceof MethodInvoker) {
         Field _method = MethodInvoker.class.getDeclaredField("method");
         _method.setAccessible(true);
         Method method = (Method) _method.get(invoker);
         return TypeParameterResolver.resolveReturnType(method, reflector.getType());
+        // 如果 GetFieldInvoker 对象，则说明是 field ，直接访问
       } else if (invoker instanceof GetFieldInvoker) {
         Field _field = GetFieldInvoker.class.getDeclaredField("field");
         _field.setAccessible(true);
@@ -147,9 +151,11 @@ public class MetaClass {
 
   public boolean hasGetter(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // 有子表达式
     if (prop.hasNext()) {
       if (reflector.hasGetter(prop.getName())) {
         MetaClass metaProp = metaClassForProperty(prop);
+        // 递归判断子表达式 children ，是否有 getting 方法
         return metaProp.hasGetter(prop.getChildren());
       } else {
         return false;

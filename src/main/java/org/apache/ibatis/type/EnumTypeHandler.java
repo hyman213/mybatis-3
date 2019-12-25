@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * 枚举 Enum <=> String
  * @author Clinton Begin
  */
 public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {

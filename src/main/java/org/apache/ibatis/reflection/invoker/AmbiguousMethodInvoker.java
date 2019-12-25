@@ -20,10 +20,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.ibatis.reflection.ReflectionException;
+import org.apache.ibatis.reflection.Reflector;
 
 public class AmbiguousMethodInvoker extends MethodInvoker {
   private final String exceptionMessage;
 
+  /**
+   * @see Reflector#pickBetterSetter(java.lang.reflect.Method, java.lang.reflect.Method, java.lang.String)
+   * @param method
+   * @param exceptionMessage
+   */
   public AmbiguousMethodInvoker(Method method, String exceptionMessage) {
     super(method);
     this.exceptionMessage = exceptionMessage;

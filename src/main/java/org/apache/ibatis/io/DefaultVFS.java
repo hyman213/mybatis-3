@@ -50,6 +50,7 @@ public class DefaultVFS extends VFS {
     return true;
   }
 
+  // 不断递归文件夹，获得到所有文件
   @Override
   public List<String> list(URL url, String path) throws IOException {
     InputStream is = null;

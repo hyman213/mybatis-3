@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.ibatis.builder.BuilderException;
+import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -45,10 +46,26 @@ import org.xml.sax.SAXParseException;
  */
 public class XPathParser {
 
+  /**
+   * xml解析后的对象
+   */
   private final Document document;
+  /**
+   * 是否校验
+   */
   private boolean validation;
+  /**
+   * XML 实体解析器 ex. org.apache.ibatis.builder.xml.XMLMapperEntityResolver
+   * @see XMLMapperEntityResolver
+   */
   private EntityResolver entityResolver;
+  /**
+   * 用来替换需要动态配置的属性值
+   */
   private Properties variables;
+  /**
+   * 用于查询 XML 中的节点和元素
+   */
   private XPath xpath;
 
   public XPathParser(String xml) {
@@ -111,6 +128,14 @@ public class XPathParser {
     this.document = document;
   }
 
+  /**
+   * 构造 XPathParser 对象
+   *
+   * @param xml XML 文件地址
+   * @param validation 是否校验 XML
+   * @param variables 变量 Properties 对象
+   * @param entityResolver XML 实体解析器
+   */
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(new StringReader(xml)));
@@ -218,6 +243,14 @@ public class XPathParser {
     return new XNode(this, node, variables);
   }
 
+  /**
+   * 获得指定元素或节点的值
+   *
+   * @param expression 表达式
+   * @param root 指定节点
+   * @param returnType 返回类型
+   * @return 值
+   */
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
       return xpath.evaluate(expression, root, returnType);
@@ -226,6 +259,12 @@ public class XPathParser {
     }
   }
 
+  /**
+   * 创建 Document 对象
+   *
+   * @param inputSource XML 的 InputSource 对象
+   * @return Document 对象
+   */
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {

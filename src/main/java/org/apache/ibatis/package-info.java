@@ -14,6 +14,7 @@
  *    limitations under the License.
  */
 /**
+ * 实现 JDBC 类型与 Java 类型之间的转换
  * The MyBatis data mapper framework makes it easier to use a relational database with object-oriented applications.
  */
 package org.apache.ibatis;

@@ -29,7 +29,13 @@ import org.apache.ibatis.cache.Cache;
  * @author Clinton Begin
  */
 public class WeakCache implements Cache {
+  /**
+   * 强引用的键的队列
+   */
   private final Deque<Object> hardLinksToAvoidGarbageCollection;
+  /**
+   * 被 GC 回收的 WeakEntry 集合，避免被 GC
+   */
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
   private final Cache delegate;
   private int numberOfHardLinks;
@@ -73,6 +79,7 @@ public class WeakCache implements Cache {
         delegate.removeObject(key);
       } else {
         hardLinksToAvoidGarbageCollection.addFirst(result);
+        // 超过上限，移除 hardLinksToAvoidGarbageCollection 的队尾
         if (hardLinksToAvoidGarbageCollection.size() > numberOfHardLinks) {
           hardLinksToAvoidGarbageCollection.removeLast();
         }

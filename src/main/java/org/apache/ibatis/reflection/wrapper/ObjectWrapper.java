@@ -22,6 +22,7 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * 对象包装器接口，基于 MetaClass 工具类，定义对指定对象的各种操作
  * @author Clinton Begin
  */
 public interface ObjectWrapper {

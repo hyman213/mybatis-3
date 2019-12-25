@@ -18,6 +18,8 @@ package org.apache.ibatis.datasource.pooled;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 
 /**
+ * 池化的 DataSourceFactory
+ * 实现类其它方法，在父类中 UnpooledDataSourceFactory 中已经实现。所以，真正的池化逻辑，在 PooledDataSource 对象中。
  * @author Clinton Begin
  */
 public class PooledDataSourceFactory extends UnpooledDataSourceFactory {

@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.mapping.StatementType;
 
 /**
+ * 通过 SQL 语句获得主键的注解
  * @author Clinton Begin
  */
 @Documented
@@ -36,8 +37,10 @@ public @interface SelectKey {
 
   String keyColumn() default "";
 
+  // 在插入语句执行前，还是执行后
   boolean before();
 
+  // 返回类型
   Class<?> resultType();
 
   StatementType statementType() default StatementType.PREPARED;

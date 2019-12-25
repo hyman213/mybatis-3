@@ -20,6 +20,9 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * SQL拼接与生成
+ */
 class SQLTest {
 
   @Test

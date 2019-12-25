@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 查询语句提供器
  * @author Clinton Begin
  */
 @Documented

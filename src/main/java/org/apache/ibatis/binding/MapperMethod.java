@@ -39,6 +39,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * Mapper 方法。在 Mapper 接口中，每个定义的方法，对应一个 MapperMethod 对象
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
@@ -219,14 +220,17 @@ public class MapperMethod {
   public static class SqlCommand {
 
     private final String name;
+    // 命令类型
     private final SqlCommandType type;
 
     public SqlCommand(Configuration configuration, Class<?> mapperInterface, Method method) {
       final String methodName = method.getName();
       final Class<?> declaringClass = method.getDeclaringClass();
+      // 获得 MappedStatement 对象
       MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,
           configuration);
       if (ms == null) {
+        // 如果有 @Flush 注解，则标记为 FLUSH 类型
         if (method.getAnnotation(Flush.class) != null) {
           name = null;
           type = SqlCommandType.FLUSH;
@@ -253,12 +257,14 @@ public class MapperMethod {
 
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
+      // ${NAMESPACE_NAME}.${语句_ID}
       String statementId = mapperInterface.getName() + "." + methodName;
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
       } else if (mapperInterface.equals(declaringClass)) {
         return null;
       }
+      // 遍历父接口，继续获得 MappedStatement 对象
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
         if (declaringClass.isAssignableFrom(superInterface)) {
           MappedStatement ms = resolveMappedStatement(superInterface, methodName,
@@ -358,11 +364,13 @@ public class MapperMethod {
       return returnsOptional;
     }
 
+    // 获得指定参数类型在方法参数中的位置
     private Integer getUniqueParamIndex(Method method, Class<?> paramType) {
       Integer index = null;
       final Class<?>[] argTypes = method.getParameterTypes();
       for (int i = 0; i < argTypes.length; i++) {
         if (paramType.isAssignableFrom(argTypes[i])) {
+          // 获得第一次的位置
           if (index == null) {
             index = i;
           } else {
@@ -375,8 +383,10 @@ public class MapperMethod {
 
     private String getMapKey(Method method) {
       String mapKey = null;
+      // 返回类型为Map
       if (Map.class.isAssignableFrom(method.getReturnType())) {
         final MapKey mapKeyAnnotation = method.getAnnotation(MapKey.class);
+        // 获得@MapKey注解的键
         if (mapKeyAnnotation != null) {
           mapKey = mapKeyAnnotation.value();
         }

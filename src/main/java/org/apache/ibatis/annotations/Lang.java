@@ -24,11 +24,13 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.scripting.LanguageDriver;
 
 /**
+ * 语言驱动的注解
  * @author Clinton Begin
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Lang {
+  // 驱动类
   Class<? extends LanguageDriver> value();
 }

@@ -33,13 +33,24 @@ import javax.sql.DataSource;
 import org.apache.ibatis.io.Resources;
 
 /**
+ * 非池化的 DataSource 实现类
+ * 每次被请求时打开和关闭连接。虽然有点慢，但对于在数据库连接可用性方面没有太高要求的简单应用程序来说，是一个很好的选择
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
 public class UnpooledDataSource implements DataSource {
 
+  /**
+   * Driver 类加载器
+   */
   private ClassLoader driverClassLoader;
+  /**
+   * Driver 属性
+   */
   private Properties driverProperties;
+  /**
+   * 已注册的Driver 映射
+   */
   private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
 
   private String driver;
@@ -52,6 +63,7 @@ public class UnpooledDataSource implements DataSource {
   private Integer defaultNetworkTimeout;
 
   static {
+    // 初始化 registeredDrivers
     Enumeration<Driver> drivers = DriverManager.getDrivers();
     while (drivers.hasMoreElements()) {
       Driver driver = drivers.nextElement();
@@ -227,15 +239,19 @@ public class UnpooledDataSource implements DataSource {
     if (!registeredDrivers.containsKey(driver)) {
       Class<?> driverType;
       try {
+        // driver 类
         if (driverClassLoader != null) {
           driverType = Class.forName(driver, true, driverClassLoader);
         } else {
           driverType = Resources.classForName(driver);
         }
+        // Driver对象
         // DriverManager requires the driver to be loaded via the system ClassLoader.
         // http://www.kfu.com/~nsayer/Java/dyn-jdbc.html
         Driver driverInstance = (Driver)driverType.getDeclaredConstructor().newInstance();
+        // 注册到DriverManager
         DriverManager.registerDriver(new DriverProxy(driverInstance));
+        // 添加到 registeredDrivers 中
         registeredDrivers.put(driver, driverInstance);
       } catch (Exception e) {
         throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e);

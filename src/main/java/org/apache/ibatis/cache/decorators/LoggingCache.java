@@ -26,7 +26,13 @@ public class LoggingCache implements Cache {
 
   private final Log log;
   private final Cache delegate;
+  /**
+   * 请求缓存的次数
+   */
   protected int requests = 0;
+  /**
+   * 命中缓存的次数
+   */
   protected int hits = 0;
 
   public LoggingCache(Cache delegate) {
@@ -51,9 +57,11 @@ public class LoggingCache implements Cache {
 
   @Override
   public Object getObject(Object key) {
+    // 请求次数+1
     requests++;
     final Object value = delegate.getObject(key);
     if (value != null) {
+      // 命中+1
       hits++;
     }
     if (log.isDebugEnabled()) {

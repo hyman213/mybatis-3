@@ -28,11 +28,15 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+/**
+ * 参数名解析器
+ */
 public class ParamNameResolver {
 
   private static final String GENERIC_NAME_PREFIX = "param";
 
   /**
+   * 参数名映射
    * <p>
    * The key is the index and the value is the name of the parameter.<br />
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
@@ -47,6 +51,9 @@ public class ParamNameResolver {
    */
   private final SortedMap<Integer, String> names;
 
+  /**
+   * 是否有{@link Param} 注解的参数
+   */
   private boolean hasParamAnnotation;
 
   public ParamNameResolver(Configuration config, Method method) {
@@ -62,6 +69,7 @@ public class ParamNameResolver {
       }
       String name = null;
       for (Annotation annotation : paramAnnotations[paramIndex]) {
+        // 从 @Param 注解中获取参数
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
           name = ((Param) annotation).value();
@@ -70,10 +78,12 @@ public class ParamNameResolver {
       }
       if (name == null) {
         // @Param was not specified.
+        // 真实参数名
         if (config.isUseActualParamName()) {
           name = getActualParamName(method, paramIndex);
         }
         if (name == null) {
+          // map顺序
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
           name = String.valueOf(map.size());
@@ -100,6 +110,7 @@ public class ParamNameResolver {
   }
 
   /**
+   * 获得参数名与值的映射
    * <p>
    * A single non-special parameter is returned without a name.
    * Multiple parameters are named using the naming rule.

@@ -26,12 +26,16 @@ import java.util.Map;
 import org.apache.ibatis.io.Resources;
 
 /**
+ * 未知的 TypeHandler 实现类。通过获取对应的 TypeHandler ，进行处理
  * @author Clinton Begin
  */
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
   private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();
 
+  /**
+   * TypeHandler 注册表
+   */
   private TypeHandlerRegistry typeHandlerRegistry;
 
   public UnknownTypeHandler(TypeHandlerRegistry typeHandlerRegistry) {
@@ -41,6 +45,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
       throws SQLException {
+    // 获得参数对应的处理器
     TypeHandler handler = resolveTypeHandler(parameter, jdbcType);
     handler.setParameter(ps, i, parameter, jdbcType);
   }

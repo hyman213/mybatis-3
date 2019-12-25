@@ -26,6 +26,7 @@ import org.apache.ibatis.cache.decorators.LruCache;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 
 /**
+ * 缓存空间配置的注解
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -33,16 +34,21 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CacheNamespace {
+  // 负责存储的 Cache 实现类
   Class<? extends Cache> implementation() default PerpetualCache.class;
 
+  // 负责过期的 Cache 实现类
   Class<? extends Cache> eviction() default LruCache.class;
 
   long flushInterval() default 0;
 
+  // 缓存容器大小
   int size() default 1024;
 
+  // 是否序列化
   boolean readWrite() default true;
 
+  // 是否阻塞
   boolean blocking() default false;
 
   /**

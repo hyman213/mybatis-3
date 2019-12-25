@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 /**
+ * java.util.Date 和 java.sql.Date相互转换
  * @author Clinton Begin
  */
 public class DateOnlyTypeHandler extends BaseTypeHandler<Date> {

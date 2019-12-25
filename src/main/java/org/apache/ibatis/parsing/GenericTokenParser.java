@@ -30,12 +30,13 @@ public class GenericTokenParser {
     this.handler = handler;
   }
 
+  // ${first_name} ${initial} ${last_name} reporting.")
   public String parse(String text) {
     if (text == null || text.isEmpty()) {
       return "";
     }
     // search open token
-    int start = text.indexOf(openToken);
+    int start = text.indexOf(openToken);//0
     if (start == -1) {
       return text;
     }
@@ -65,7 +66,7 @@ public class GenericTokenParser {
             offset = end + closeToken.length();
             end = text.indexOf(closeToken, offset);
           } else {
-            expression.append(src, offset, end - offset);
+            expression.append(src, offset, end - offset);//name
             break;
           }
         }
@@ -74,6 +75,7 @@ public class GenericTokenParser {
           builder.append(src, start, src.length - start);
           offset = src.length;
         } else {
+          // 传入的handler进行处理
           builder.append(handler.handleToken(expression.toString()));
           offset = end + closeToken.length();
         }

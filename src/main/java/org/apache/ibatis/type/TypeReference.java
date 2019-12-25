@@ -19,6 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
+ * 解析类上定义的泛型
  * References a generic type.
  *
  * @param <T> the referenced type
@@ -27,6 +28,9 @@ import java.lang.reflect.Type;
  */
 public abstract class TypeReference<T> {
 
+  /**
+   * 泛型
+   */
   private final Type rawType;
 
   protected TypeReference() {

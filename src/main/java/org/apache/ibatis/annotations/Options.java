@@ -25,6 +25,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.StatementType;
 
 /**
+ * 操作可选项
  * @author Clinton Begin
  */
 @Documented
@@ -44,23 +45,30 @@ public @interface Options {
     FALSE
   }
 
+  // 是否使用缓存
   boolean useCache() default true;
 
+  // 刷新缓存的策略
   FlushCachePolicy flushCache() default FlushCachePolicy.DEFAULT;
 
+  // 结果类型
   ResultSetType resultSetType() default ResultSetType.DEFAULT;
 
+  // 语句类型
   StatementType statementType() default StatementType.PREPARED;
 
+  // 加载数量
   int fetchSize() default -1;
 
   int timeout() default -1;
 
+  // 是否生成主键
   boolean useGeneratedKeys() default false;
 
   String keyProperty() default "";
 
   String keyColumn() default "";
 
+  // 结果集
   String resultSets() default "";
 }

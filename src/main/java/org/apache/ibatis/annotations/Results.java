@@ -22,6 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 结果集的注解
+ * 对应XML标签为 resultMap
  * @author Clinton Begin
  */
 @Documented

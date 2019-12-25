@@ -28,7 +28,13 @@ import org.apache.ibatis.cache.Cache;
 public class FifoCache implements Cache {
 
   private final Cache delegate;
+  /**
+   * 双端队列, 记录缓存键的添加
+   */
   private final Deque<Object> keyList;
+  /**
+   * 队列上限
+   */
   private int size;
 
   public FifoCache(Cache delegate) {

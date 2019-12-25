@@ -26,6 +26,9 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 /**
+ * java.lang.reflect.Type 参数解析器工具类
+ * Type参考：https://juejin.im/post/5adefaba518825670e5cb44d
+ *
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
@@ -218,6 +221,9 @@ public class TypeParameterResolver {
     super();
   }
 
+  /**
+   * 参数化类型，即泛型。例如：List<T>、Map<K, V>等带有参数化的配置
+   */
   static class ParameterizedTypeImpl implements ParameterizedType {
     private Class<?> rawType;
 

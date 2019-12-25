@@ -32,6 +32,9 @@ import java.util.Properties;
  */
 public class Resources {
 
+  /**
+   * ClassLoaderWrapper 对象
+   */
   private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
 
   /**
@@ -62,6 +65,7 @@ public class Resources {
   }
 
   /**
+   * 静态方法，获得指定资源的 URL
    * Returns the URL of the resource on the classpath
    *
    * @param resource The resource to find
@@ -90,6 +94,7 @@ public class Resources {
   }
 
   /**
+   * 静态方法，获得指定资源的 InputStream
    * Returns a resource on the classpath as a Stream object
    *
    * @param resource The resource to find
@@ -117,6 +122,7 @@ public class Resources {
   }
 
   /**
+   * 静态方法，获得指定资源的 Properties
    * Returns a resource on the classpath as a Properties object
    *
    * @param resource The resource to find
@@ -148,6 +154,7 @@ public class Resources {
   }
 
   /**
+   * 静态方法，获得指定资源的 Reader
    * Returns a resource on the classpath as a Reader object
    *
    * @param resource The resource to find
@@ -183,6 +190,7 @@ public class Resources {
   }
 
   /**
+   * 静态方法，获得指定资源的 File
    * Returns a resource on the classpath as a File object
    *
    * @param resource The resource to find

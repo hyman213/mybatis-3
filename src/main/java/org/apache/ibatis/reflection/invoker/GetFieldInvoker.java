@@ -29,6 +29,13 @@ public class GetFieldInvoker implements Invoker {
     this.field = field;
   }
 
+  /**
+   * 获得Field属性
+   * @param target 目标
+   * @param args 参数
+   * @return
+   * @throws IllegalAccessException
+   */
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
     try {
@@ -43,6 +50,10 @@ public class GetFieldInvoker implements Invoker {
     }
   }
 
+  /**
+   * 返回属性类型
+   * @return
+   */
   @Override
   public Class<?> getType() {
     return field.getType();

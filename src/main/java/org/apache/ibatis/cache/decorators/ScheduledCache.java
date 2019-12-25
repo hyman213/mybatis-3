@@ -18,12 +18,22 @@ package org.apache.ibatis.cache.decorators;
 import org.apache.ibatis.cache.Cache;
 
 /**
+ * 定时清空的Cache对象，每次操作前判断是否需要清空
  * @author Clinton Begin
  */
 public class ScheduledCache implements Cache {
 
+  /**
+   * 被装饰的Cache对象
+   */
   private final Cache delegate;
+  /**
+   * 清空间隔, ms
+   */
   protected long clearInterval;
+  /**
+   * 最后清空时间, ms
+   */
   protected long lastClear;
 
   public ScheduledCache(Cache delegate) {

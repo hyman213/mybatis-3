@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 匹配的JDBC Type类型的注解
  * @author Eduardo Macarron
  */
 @Documented
