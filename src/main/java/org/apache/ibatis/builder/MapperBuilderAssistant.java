@@ -50,13 +50,24 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * 继承 BaseBuilder 抽象类，Mapper 构造器的小助手，提供了一些公用的方法，例如创建 ParameterMap、MappedStatement 对象等等。
+ * XMLMapperBuilder 和 MapperAnnotationBuilder都能调用到这个公用方法
  * @author Clinton Begin
  */
 public class MapperBuilderAssistant extends BaseBuilder {
 
+  /**
+   * 当前 Mapper 命名空间
+   */
   private String currentNamespace;
+  /**
+   * 资源引用的地址
+   */
   private final String resource;
   private Cache currentCache;
+  /**
+   * 是否未解析成功 Cache 引用
+   */
   private boolean unresolvedCacheRef; // issue #676
 
   public MapperBuilderAssistant(Configuration configuration, String resource) {
@@ -180,6 +191,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Discriminator discriminator,
       List<ResultMapping> resultMappings,
       Boolean autoMapping) {
+    // 获得 ResultMap 编号，即格式为 `${namespace}.${id}`
     id = applyCurrentNamespace(id, false);
     extend = applyCurrentNamespace(extend, true);
 
@@ -210,6 +222,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return resultMap;
   }
 
+  // 构建 Discriminator 对象
   public Discriminator buildDiscriminator(
       Class<?> resultType,
       String column,
@@ -232,6 +245,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         null,
         null,
         false);
+    // 创建 namespaceDiscriminatorMap 映射
     Map<String, String> namespaceDiscriminatorMap = new HashMap<>();
     for (Map.Entry<String, String> e : discriminatorMap.entrySet()) {
       String resultMap = e.getValue();
@@ -353,6 +367,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return resultMaps;
   }
 
+  // 构造 ResultMapping 对象
   public ResultMapping buildResultMapping(
       Class<?> resultType,
       String property,
@@ -407,6 +422,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return columns;
   }
 
+  // 解析组合字段名称成 ResultMapping 集合
   private List<ResultMapping> parseCompositeColumnName(String columnName) {
     List<ResultMapping> composites = new ArrayList<>();
     if (columnName != null && (columnName.indexOf('=') > -1 || columnName.indexOf(',') > -1)) {

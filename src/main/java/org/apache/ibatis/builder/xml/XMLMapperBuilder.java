@@ -49,14 +49,24 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
+ * 继承 BaseBuilder 抽象类，Mapper XML 配置构建器，主要负责解析 Mapper 映射配置文件
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class XMLMapperBuilder extends BaseBuilder {
 
+  // Java XPath解析器
   private final XPathParser parser;
+  // 构造器助手
   private final MapperBuilderAssistant builderAssistant;
+  /**
+   * 可被其他语句引用的可重用语句块的集合
+   * 例如：<sql id="userColumns"> ${alias}.id,${alias}.username,${alias}.password </sql>
+    */
   private final Map<String, XNode> sqlFragments;
+  /**
+   * 资源引用
+   */
   private final String resource;
 
   @Deprecated
@@ -90,12 +100,17 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   public void parse() {
+    // 判断是否已加载
     if (!configuration.isResourceLoaded(resource)) {
+      // 解析`<mapper/>`节点
       configurationElement(parser.evalNode("/mapper"));
+      // 标记已加载
       configuration.addLoadedResource(resource);
+      // 绑定Mapper： namespace 与 Mapper.xml
       bindMapperForNamespace();
     }
 
+    // 再次解析未完成的
     parsePendingResultMaps();
     parsePendingCacheRefs();
     parsePendingStatements();
@@ -111,12 +126,19 @@ public class XMLMapperBuilder extends BaseBuilder {
       if (namespace == null || namespace.equals("")) {
         throw new BuilderException("Mapper's namespace cannot be empty");
       }
+      // 设置当前 namespace
       builderAssistant.setCurrentNamespace(namespace);
+      // cache-ref
       cacheRefElement(context.evalNode("cache-ref"));
+      // cache
       cacheElement(context.evalNode("cache"));
+      // parameterMap
       parameterMapElement(context.evalNodes("/mapper/parameterMap"));
+      // resultMap
       resultMapElements(context.evalNodes("/mapper/resultMap"));
+      // sqlElement
       sqlElement(context.evalNodes("/mapper/sql"));
+      // 遍历 <select /> <insert /> <update /> <delete /> 节点们
       buildStatementFromContext(context.evalNodes("select|insert|update|delete"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing Mapper XML. The XML location is '" + resource + "'. Cause: " + e, e);
@@ -253,6 +275,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     return resultMapElement(resultMapNode, Collections.emptyList(), null);
   }
 
+  // 解析 <resultMap /> 节点
   private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings, Class<?> enclosingType) throws Exception {
     ErrorContext.instance().activity("processing " + resultMapNode.getValueBasedIdentifier());
     String type = resultMapNode.getStringAttribute("type",
@@ -345,6 +368,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void sqlElement(List<XNode> list, String requiredDatabaseId) {
     for (XNode context : list) {
       String databaseId = context.getStringAttribute("databaseId");
+      // 获得完整的 id 属性，格式为 `${namespace}.${id}`
       String id = context.getStringAttribute("id");
       id = builderAssistant.applyCurrentNamespace(id, false);
       if (databaseIdMatchesCurrent(id, databaseId, requiredDatabaseId)) {
@@ -365,6 +389,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     }
     // skip this fragment if there is a previous one with a not null databaseId
     XNode context = this.sqlFragments.get(id);
+    // 若存在，则判断原有的 sqlFragment 是否 databaseId 为空。因为，当前 databaseId 为空，这样两者才能匹配
     return context.getStringAttribute("databaseId") == null;
   }
 

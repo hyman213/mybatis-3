@@ -34,12 +34,19 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * Statement XML 配置构建器，主要负责解析 Statement 配置，即 <select />、<insert />、<update />、<delete /> 标签。
  * @author Clinton Begin
  */
 public class XMLStatementBuilder extends BaseBuilder {
 
   private final MapperBuilderAssistant builderAssistant;
+  /**
+   * 当前 XML 节点，例如：`<select />、<insert />、<update />、<delete />` 标签
+   */
   private final XNode context;
+  /**
+   * 要求的 databaseId
+   */
   private final String requiredDatabaseId;
 
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
@@ -61,6 +68,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       return;
     }
 
+    // 节点名, select, update ...
     String nodeName = context.getNode().getNodeName();
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;

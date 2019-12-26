@@ -38,15 +38,14 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
-import org.apache.ibatis.session.AutoMappingBehavior;
-import org.apache.ibatis.session.AutoMappingUnknownColumnBehavior;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.LocalCacheScope;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.JdbcType;
 
 /**
+ * 继承 BaseBuilder 抽象类，XML 配置构建器，主要负责解析 mybatis-config.xml 配置文件
+ * 入口是
+ * @see SqlSessionFactoryBuilder#build(java.io.Reader, java.lang.String, java.util.Properties)
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -99,17 +98,31 @@ public class XMLConfigBuilder extends BaseBuilder {
     return configuration;
   }
 
+  /**
+   * 解析 <configuration /> 节点
+   * https://mybatis.org/mybatis-3/zh/configuration.html
+   * @param root
+   */
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
+      // properties节点
       propertiesElement(root.evalNode("properties"));
+      // setting
       Properties settings = settingsAsProperties(root.evalNode("settings"));
+      // vfs
       loadCustomVfs(settings);
+      // log
       loadCustomLogImpl(settings);
+      // alias
       typeAliasesElement(root.evalNode("typeAliases"));
+      // plugins
       pluginElement(root.evalNode("plugins"));
+      // objectFactory
       objectFactoryElement(root.evalNode("objectFactory"));
+      // objectWrapperFactory
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
+      // reflectorFactory
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
@@ -159,6 +172,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void typeAliasesElement(XNode parent) {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
+        // 注册包下所有类
         if ("package".equals(child.getName())) {
           String typeAliasPackage = child.getStringAttribute("name");
           configuration.getTypeAliasRegistry().registerAliases(typeAliasPackage);
@@ -218,23 +232,34 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
+  /**
+   * 1.解析 <properties /> 标签，成 Properties 对象。
+   * 2.覆盖 configuration 中的 Properties 对象到上面的结果。
+   * 3.设置结果到 parser 和 configuration 中。
+   * @param context
+   * @throws Exception
+   */
   private void propertiesElement(XNode context) throws Exception {
     if (context != null) {
+      // 读取子标签们，为 Properties 对象
       Properties defaults = context.getChildrenAsProperties();
+      // 读取 resource 和 url
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
       if (resource != null && url != null) {
         throw new BuilderException("The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
       }
-      if (resource != null) {
+      if (resource != null) {// 本地配置文件
         defaults.putAll(Resources.getResourceAsProperties(resource));
-      } else if (url != null) {
+      } else if (url != null) {// 远程配置
         defaults.putAll(Resources.getUrlAsProperties(url));
       }
+      // 覆盖配置
       Properties vars = configuration.getVariables();
       if (vars != null) {
         defaults.putAll(vars);
       }
+      // 设置 defaults 到 parser 和 configuration 中
       parser.setVariables(defaults);
       configuration.setVariables(defaults);
     }

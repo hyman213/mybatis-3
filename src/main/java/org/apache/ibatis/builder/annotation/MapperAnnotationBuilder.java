@@ -92,12 +92,19 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
+ * Mapper 注解构造器，负责解析 Mapper 接口上的注解
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class MapperAnnotationBuilder {
 
+  /**
+   * SQL 操作注解集合
+   */
   private static final Set<Class<? extends Annotation>> SQL_ANNOTATION_TYPES = new HashSet<>();
+  /**
+   * SQL 操作提供者注解集合
+   */
   private static final Set<Class<? extends Annotation>> SQL_PROVIDER_ANNOTATION_TYPES = new HashSet<>();
 
   private final Configuration configuration;
@@ -125,24 +132,33 @@ public class MapperAnnotationBuilder {
 
   public void parse() {
     String resource = type.toString();
+    // 是否加载过
     if (!configuration.isResourceLoaded(resource)) {
+      // 加载 XML Mapper
       loadXmlResource();
+      // 标记已加载
       configuration.addLoadedResource(resource);
+      // 设置 namespace 属性
       assistant.setCurrentNamespace(type.getName());
+      // 解析 CacheNamespace 注解
       parseCache();
+      // 解析 CacheNamespaceRef 注解
       parseCacheRef();
       Method[] methods = type.getMethods();
       for (Method method : methods) {
         try {
           // issue #237
           if (!method.isBridge()) {
+            // 执行解析
             parseStatement(method);
           }
         } catch (IncompleteElementException e) {
+          // 添加到 configuration 中
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
       }
     }
+    // 解析待定的方法
     parsePendingMethods();
   }
 
