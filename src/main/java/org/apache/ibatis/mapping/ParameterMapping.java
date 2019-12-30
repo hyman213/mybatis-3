@@ -30,6 +30,7 @@ public class ParameterMapping {
   private Configuration configuration;
 
   private String property;
+  // 参数类型，目前只需要关注 ParameterMode.IN 的情况，另外的 OUT、INOUT 是在存储过程中使用，暂时无视
   private ParameterMode mode;
   private Class<?> javaType = Object.class;
   private JdbcType jdbcType;

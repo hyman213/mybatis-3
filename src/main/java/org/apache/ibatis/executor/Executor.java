@@ -42,12 +42,14 @@ public interface Executor {
 
   <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException;
 
+  // 刷入批处理语句
   List<BatchResult> flushStatements() throws SQLException;
 
   void commit(boolean required) throws SQLException;
 
   void rollback(boolean required) throws SQLException;
 
+  // CacheKey
   CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql);
 
   boolean isCached(MappedStatement ms, CacheKey key);
@@ -62,6 +64,7 @@ public interface Executor {
 
   boolean isClosed();
 
+  // 设置包装的 Executor 对象
   void setExecutorWrapper(Executor executor);
 
 }

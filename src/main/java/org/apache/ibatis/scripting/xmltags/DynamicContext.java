@@ -27,6 +27,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 动态 SQL ，用于每次执行 SQL 操作时，记录动态 SQL 处理后的最终 SQL 字符串
  * @author Clinton Begin
  */
 public class DynamicContext {
@@ -38,7 +39,9 @@ public class DynamicContext {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
   }
 
+  // 上下文参数集合
   private final ContextMap bindings;
+  // 生成后的SQL
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
   private int uniqueNumber = 0;
 

@@ -34,10 +34,15 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
+ * 可重用的 Executor 实现类
  * @author Clinton Begin
  */
 public class ReuseExecutor extends BaseExecutor {
 
+  /**
+   * Statement 的缓存
+   * KEY ：SQL
+   */
   private final Map<String, Statement> statementMap = new HashMap<>();
 
   public ReuseExecutor(Configuration configuration, Transaction transaction) {
@@ -82,6 +87,7 @@ public class ReuseExecutor extends BaseExecutor {
     BoundSql boundSql = handler.getBoundSql();
     String sql = boundSql.getSql();
     if (hasStatementFor(sql)) {
+      // 从缓存中获得 Statement 或 PrepareStatement 对象
       stmt = getStatement(sql);
       applyTransactionTimeout(stmt);
     } else {

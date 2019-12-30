@@ -345,12 +345,14 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
+      // 情况一，如果 localSqlSession 中存在 SqlSession 对象，说明是自管理模式
       if (sqlSession != null) {
         try {
           return method.invoke(sqlSession, args);
         } catch (Throwable t) {
           throw ExceptionUtil.unwrapThrowable(t);
         }
+        // 情况二，如果没有 SqlSession 对象，则直接创建一个
       } else {
         try (SqlSession autoSqlSession = openSession()) {
           try {

@@ -16,6 +16,7 @@
 package org.apache.ibatis.scripting.xmltags;
 
 /**
+ * 每个 XML Node 会解析成对应的 SQL Node 对象
  * @author Clinton Begin
  */
 public interface SqlNode {

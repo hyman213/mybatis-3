@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * LanguageDriver 注册表
  * @author Frank D. Martinez [mnesarco]
  */
 public class LanguageDriverRegistry {
@@ -27,6 +28,7 @@ public class LanguageDriverRegistry {
 
   private Class<? extends LanguageDriver> defaultDriverClass;
 
+  // org.apache.ibatis.session.Configuration 构造方法中会初始化
   public void register(Class<? extends LanguageDriver> cls) {
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");

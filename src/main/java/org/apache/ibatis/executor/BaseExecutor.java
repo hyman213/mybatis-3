@@ -52,13 +52,16 @@ public abstract class BaseExecutor implements Executor {
   private static final Log log = LogFactory.getLog(BaseExecutor.class);
 
   protected Transaction transaction;
+  // 包装的 Executor 对象
   protected Executor wrapper;
-
+  // 延迟加载队列
   protected ConcurrentLinkedQueue<DeferredLoad> deferredLoads;
+  // 一级缓存
   protected PerpetualCache localCache;
   protected PerpetualCache localOutputParameterCache;
   protected Configuration configuration;
 
+  // 记录嵌套查询的层级
   protected int queryStack;
   private boolean closed;
 

@@ -26,6 +26,12 @@ public class InterceptorChain {
 
   private final List<Interceptor> interceptors = new ArrayList<>();
 
+  /**
+   * 应用所有拦截器到指定目标对象
+   * 一共可以有四种目标对象类型可以被拦截：1）Executor；2）StatementHandler；3）ParameterHandler；4）ResultSetHandler
+   * @param target
+   * @return
+   */
   public Object pluginAll(Object target) {
     for (Interceptor interceptor : interceptors) {
       target = interceptor.plugin(target);
@@ -33,6 +39,10 @@ public class InterceptorChain {
     return target;
   }
 
+  /**
+   * 该方法在 Configuration 的 #pluginElement(XNode parent) 方法中被调用
+   * @param interceptor
+   */
   public void addInterceptor(Interceptor interceptor) {
     interceptors.add(interceptor);
   }

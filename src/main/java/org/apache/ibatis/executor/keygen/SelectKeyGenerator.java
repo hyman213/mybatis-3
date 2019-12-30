@@ -57,6 +57,7 @@ public class SelectKeyGenerator implements KeyGenerator {
 
   private void processGeneratedKeys(Executor executor, MappedStatement ms, Object parameter) {
     try {
+      // 有查询主键的 SQL 语句，即 keyStatement 对象非空
       if (parameter != null && keyStatement != null && keyStatement.getKeyProperties() != null) {
         String[] keyProperties = keyStatement.getKeyProperties();
         final Configuration configuration = ms.getConfiguration();
@@ -81,6 +82,7 @@ public class SelectKeyGenerator implements KeyGenerator {
                 setValue(metaParam, keyProperties[0], values.get(0));
               }
             } else {
+              // 遍历，进行赋值
               handleMultipleProperties(keyProperties, metaParam, metaResult);
             }
           }

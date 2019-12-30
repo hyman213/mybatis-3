@@ -30,12 +30,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * XML 动态语句( SQL )构建器，负责将 SQL 解析成 SqlSource 对象
  * @author Clinton Begin
  */
 public class XMLScriptBuilder extends BaseBuilder {
 
+  // 当前 SQL 的 XNode 对象
   private final XNode context;
   private boolean isDynamic;
+  // SQL 方法类型
   private final Class<?> parameterType;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
 
@@ -63,7 +66,9 @@ public class XMLScriptBuilder extends BaseBuilder {
     nodeHandlerMap.put("bind", new BindHandler());
   }
 
+  // 负责将 SQL 解析成 SqlSource 对象
   public SqlSource parseScriptNode() {
+    // 解析SQL
     MixedSqlNode rootSqlNode = parseDynamicTags(context);
     SqlSource sqlSource;
     if (isDynamic) {

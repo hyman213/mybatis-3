@@ -32,7 +32,9 @@ public class TrimSqlNode implements SqlNode {
   private final SqlNode contents;
   private final String prefix;
   private final String suffix;
+  // 需要被删除的前缀
   private final List<String> prefixesToOverride;
+  // 需要删除的后缀
   private final List<String> suffixesToOverride;
   private final Configuration configuration;
 
@@ -57,6 +59,7 @@ public class TrimSqlNode implements SqlNode {
     return result;
   }
 
+  // 使用 | 分隔字符串成字符串数组，并都转换成大写。
   private static List<String> parseOverrides(String overrides) {
     if (overrides != null) {
       final StringTokenizer parser = new StringTokenizer(overrides, "|", false);

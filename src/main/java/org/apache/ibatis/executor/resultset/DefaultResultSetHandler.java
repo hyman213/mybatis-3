@@ -349,6 +349,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     ResultSet resultSet = rsw.getResultSet();
     skipRows(resultSet, rowBounds);
+    // 是否继续处理 ResultSet
     while (shouldProcessMoreRows(resultContext, rowBounds) && !resultSet.isClosed() && resultSet.next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(resultSet, resultMap, null);
       Object rowValue = getRowValue(rsw, discriminatedResultMap, null);
@@ -608,12 +609,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final Class<?> resultType = resultMap.getType();
     final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);
     final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
+    // 情况一，如果有对应的 TypeHandler 对象，则意味着是基本类型，直接创建对结果应对象
     if (hasTypeHandlerForResultObject(rsw, resultType)) {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
+      // 如果 ResultMap 中，如果定义了 `<constructor />` 节点，则通过反射调用该构造方法，创建对应结果对象
     } else if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs, columnPrefix);
+      // 如果有默认的无参的构造方法，则使用该构造方法，创建对应结果对象
     } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
       return objectFactory.create(resultType);
+      // 通过自动映射的方式查找合适的构造方法，后使用该构造方法，创建对应结果对象
     } else if (shouldApplyAutomaticMappings(resultMap, false)) {
       return createByConstructorSignature(rsw, resultType, constructorArgTypes, constructorArgs);
     }

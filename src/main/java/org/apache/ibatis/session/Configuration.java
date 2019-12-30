@@ -592,6 +592,16 @@ public class Configuration {
     return resultSetHandler;
   }
 
+  /**
+   * 创建 StatementHandler
+   * @param executor
+   * @param mappedStatement
+   * @param parameterObject
+   * @param rowBounds
+   * @param resultHandler
+   * @param boundSql
+   * @return
+   */
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
     statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
@@ -602,6 +612,12 @@ public class Configuration {
     return newExecutor(transaction, defaultExecutorType);
   }
 
+  /**
+   * 创建Executor对象
+   * @param transaction
+   * @param executorType
+   * @return
+   */
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;

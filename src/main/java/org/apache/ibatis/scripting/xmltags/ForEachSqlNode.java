@@ -21,6 +21,7 @@ import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * <foreach />标签
  * @author Clinton Begin
  */
 public class ForEachSqlNode implements SqlNode {
@@ -56,6 +57,7 @@ public class ForEachSqlNode implements SqlNode {
       return true;
     }
     boolean first = true;
+    // 添加open
     applyOpen(context);
     int i = 0;
     for (Object o : iterable) {
@@ -83,6 +85,7 @@ public class ForEachSqlNode implements SqlNode {
       context = oldContext;
       i++;
     }
+    // 添加close
     applyClose(context);
     context.getBindings().remove(item);
     context.getBindings().remove(index);
